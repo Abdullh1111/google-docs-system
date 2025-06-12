@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import config from './config'
+import { globalErrorHandler } from './hooks/globalErrorHandler'
+import userRouter from './modules/user/user.router'
 
 const app = express()
 
@@ -11,6 +13,10 @@ app.use(cors({
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World! from backend')
 })
+
+app.use("/auth",userRouter)
+
+app.use(globalErrorHandler)
 
 
 export default app
