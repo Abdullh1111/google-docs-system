@@ -9,5 +9,6 @@ const userRouter = Router();
 
 userRouter.post("/register", signupValidation, userController.createUser);
 userRouter.post("/login", signInValidation, userController.signInUser);
+userRouter.post("/logout", userController.logoutUser);
 
 export default userRouter;

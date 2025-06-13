@@ -31,7 +31,7 @@ async function signInUser(data: TUser) {
     );
     if (isPasswordCorrect) {
       const jwtToken = jwt.sign(
-        { email: data.email, name: data.name },
+        { email: userExist.email, fullName: userExist.fullName, role: userExist.role },
         config.JWT_SECRET,
         {
           expiresIn: "24h",

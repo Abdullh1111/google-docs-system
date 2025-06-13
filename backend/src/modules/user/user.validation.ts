@@ -3,7 +3,7 @@ import { z } from "zod";
 // Define schema for signup validation
 export const signupValidationSchema = z.object({
   email: z.string().email(),
-  name: z
+  fullName: z
     .string()
     .min(3, { message: "Name must be at least 3 characters long" })
     .max(50, { message: "Name cannot exceed 50 characters" }),

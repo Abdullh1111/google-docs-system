@@ -19,11 +19,19 @@ const signInUser = catchAsync(async (req: Request, res: Response) => {
     accessToken: token,
     success: true,
     message: "User signed in successfully",
-    data: userExist,
+    user: userExist,
+  });
+});
+
+const logoutUser = catchAsync(async (req: Request, res: Response) => {
+  res.clearCookie("accessToken").send({
+    success: true,
+    message: "User logged out successfully",
   });
 });
 
 export const userController = {
   createUser,
   signInUser,
+  logoutUser
 };
