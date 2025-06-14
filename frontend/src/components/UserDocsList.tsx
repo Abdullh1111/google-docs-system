@@ -18,7 +18,6 @@ export default function UserDocumentList() {
   useEffect(() => {
     if (getDocRes.data) {
       setDocuments(getDocRes.data.data);
-      handleSuccess(getDocRes.data.message || "Documents fetched successfully");
     }
     if (getDocRes.error) {
       handleError(getDocRes.error);
@@ -61,7 +60,7 @@ export default function UserDocumentList() {
       <div className="space-y-4">
         {documents.map((doc) => (
           <div
-            key={doc.id}
+            key={doc._id}
             className="flex items-center justify-between p-4 border rounded-md bg-white shadow hover:shadow-md transition"
           >
             <Link href={`/dashboard/documents/${doc._id}`} className="flex-1">
