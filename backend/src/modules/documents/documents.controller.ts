@@ -13,6 +13,37 @@ const createDocument = catchAsync(async (req: CustomRequest, res: Response) => {
   });
 });
 
+const getDocuments = catchAsync(async (req: CustomRequest, res: Response) => {
+    const userId = req?.user as Iuser
+  const result = await documentsService.getDocuments(userId.id);
+  res.send({
+    success: true,
+    message: "Documents fetched successfully",
+    data: result,
+  });
+});
+
+const updateDocument = catchAsync(async (req: CustomRequest, res: Response) => {
+  const result = await documentsService.updateDocument(req.params.id, req.body);
+  res.send({
+    success: true,
+    message: "Document updated successfully",
+    data: result,
+  });
+});
+
+const deleteDocument = catchAsync(async (req: CustomRequest, res: Response) => {
+  const result = await documentsService.deleteDocument(req.params.id);
+  res.send({
+    success: true,
+    message: "Document deleted successfully",
+    data: result,
+  });
+});
+
 export default {
   createDocument,
+  getDocuments,
+  updateDocument,
+  deleteDocument,
 };

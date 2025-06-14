@@ -1,23 +1,53 @@
 "use client";
 
-import { Document } from "@/types/documens.interface";
+import { handleError, handleSuccess } from "@/lib/toaster";
+import { useDeleteDocumentMutation, useGetDocumentsQuery } from "@/redux/services/doc.service";
+import { TDocument } from "@/types/documens.interface";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { CustomDialog } from "./CustomDialog";
+import LoadingSpinner from "./Loading";
 import { Button } from "./ui/button";
 
 export default function UserDocumentList() {
-  const documents: Document[] = [
-    { id: "1", title: "Document 1" },
-    { id: "2", title: "Document 2" },
-    { id: "3", title: "Document 3" },
-  ];
+  const getDocRes = useGetDocumentsQuery();
+  const [deleteDocs, deleteDocsRes] = useDeleteDocumentMutation();
+  const [documents, setDocuments] = useState<TDocument[]>([]);
+
+
+  useEffect(() => {
+    if (getDocRes.data) {
+      setDocuments(getDocRes.data.data);
+      handleSuccess(getDocRes.data.message || "Documents fetched successfully");
+    }
+    if (getDocRes.error) {
+      handleError(getDocRes.error);
+    }
+  }, [getDocRes]);
 
 
   const onDelete = (id: string) => {
-    console.log("Delete:", id);
-    // Handle delete logic
+    deleteDocs(id);
   };
+  console.log(documents);
 
+  useEffect(() => {
+    if (deleteDocsRes.data) {
+      handleSuccess(deleteDocsRes.data.message || "Document deleted successfully");
+    }
+    if (deleteDocsRes.error) {
+      handleError(deleteDocsRes.error);
+    }
+  }, [deleteDocsRes]);
+
+
+  if (getDocRes.isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
@@ -34,7 +64,7 @@ export default function UserDocumentList() {
             key={doc.id}
             className="flex items-center justify-between p-4 border rounded-md bg-white shadow hover:shadow-md transition"
           >
-            <Link href={`/dashboard/documents/${doc.id}`} className="flex-1">
+            <Link href={`/dashboard/documents/${doc._id}`} className="flex-1">
               <h3 className="font-medium text-lg hover:underline text-gray-800">
                 {doc.title}
               </h3>
@@ -43,12 +73,12 @@ export default function UserDocumentList() {
             <div className="flex space-x-3 ml-4">
               <CustomDialog
                 type="edit"
-                id={doc.id}
+                id={doc._id}
                 className="text-sm text-blue-600 hover:underline bg-transparent hover:text-blue-700"
               />
               <Button
-              variant={"outline"}
-                onClick={() => onDelete(doc.id)}
+                variant={"outline"}
+                onClick={() => onDelete(doc._id as string)}
                 className="text-sm text-red-600 hover:underline hover:text-red-700"
               >
                 Delete

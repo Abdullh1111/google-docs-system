@@ -13,6 +13,24 @@ const createDocument = async (data: TDocument, userId: Types.ObjectId) => {
     return result;
 }
 
+const getDocuments = async (userId: Types.ObjectId) => {
+    const result = await DocumentModel.find({userId})
+    return result
+}
+
+const updateDocument = async (id: string, data: Partial<TDocument>) => {
+    const result = await DocumentModel.findByIdAndUpdate(id, data)
+    return result
+}
+
+const deleteDocument = async (id: string) => {
+    const result = await DocumentModel.findByIdAndDelete(id)
+    return result
+}
+
 export default {
-    createDocument
+    createDocument,
+    getDocuments,
+    updateDocument,
+    deleteDocument
 }
