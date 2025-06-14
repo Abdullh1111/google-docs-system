@@ -1,9 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "../config";
+import { TUser } from "../modules/user/user.interface";
+import { Types } from "mongoose";
 
+export interface Iuser extends TUser {
+  id: Types.ObjectId;
+}
 export interface CustomRequest extends Request {
-  user?: any;
+  user?: Iuser;
 }
 
 export const authorized = (
@@ -27,7 +32,7 @@ export const authorized = (
   const tokenSecret = config.JWT_SECRET;
 
   try {
-    const payload = jwt.verify(token as string, tokenSecret);
+    const payload = jwt.verify(token as string, tokenSecret) as Iuser;
     console.log(payload);
     req.user = payload;
     next();

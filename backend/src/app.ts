@@ -3,6 +3,7 @@ import cors from 'cors'
 import config from './config'
 import { globalErrorHandler } from './hooks/globalErrorHandler'
 import userRouter from './modules/user/user.router'
+import docsRouter from './modules/documents/documents.router'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 app.use("/auth",userRouter)
+app.use("docs",docsRouter)
 
 app.use(globalErrorHandler)
 
