@@ -1,12 +1,7 @@
+import { TUser } from '@/types/user.interface'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-export type TUser = {
-  fullName: string;
-  email: string;
-  avatar: string;
-  role: "USER" | "ADMIN";
-};
 
 export interface UserState {
   user: TUser
