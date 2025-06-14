@@ -16,7 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 app.use("/auth",userRouter)
-app.use("docs",docsRouter)
+app.use("/docs",docsRouter)
 
 app.use(globalErrorHandler)
 
