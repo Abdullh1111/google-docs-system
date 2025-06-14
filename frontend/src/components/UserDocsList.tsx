@@ -34,7 +34,7 @@ export default function UserDocumentList() {
             key={doc.id}
             className="flex items-center justify-between p-4 border rounded-md bg-white shadow hover:shadow-md transition"
           >
-            <Link href={`/documents/${doc.id}`} className="flex-1">
+            <Link href={`/dashboard/documents/${doc.id}`} className="flex-1">
               <h3 className="font-medium text-lg hover:underline text-gray-800">
                 {doc.title}
               </h3>

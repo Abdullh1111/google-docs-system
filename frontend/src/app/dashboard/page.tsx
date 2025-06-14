@@ -1,14 +1,5 @@
-"use client"
-import MyEditor from '@/components/MyEditor'
-// import { useAppSelector } from '@/redux/redux.hook'
-import React from 'react'
+import UserDocumentList from "@/components/UserDocsList";
 
-export default function page() {
-  // const user = useAppSelector(state => state.user.user)
-  // console.log(user);
-  return (
-    <div>
-      <MyEditor />
-    </div>
-  )
+export default function Documents() {
+  return <UserDocumentList />;
 }

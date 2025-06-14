@@ -1,9 +1,5 @@
-
-import UserDocumentList from '@/components/UserDocsList'
-import React from 'react'
+import UserDocumentList from "@/components/UserDocsList";
 
 export default function Documents() {
-  return (
-    <UserDocumentList />
-  )
+  return <UserDocumentList />;
 }
