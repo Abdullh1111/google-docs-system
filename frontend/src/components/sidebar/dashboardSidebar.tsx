@@ -10,7 +10,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import LogoutButton from "../LogoutButton";
-import { useAppSelector } from "@/redux/redux.hook";
 
 type props = {
   items: {

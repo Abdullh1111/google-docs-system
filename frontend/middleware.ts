@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { TRole } from "@/types/role.interface";
 import { verifyToken } from "@/lib/auth";
 
 // Define protected routes and their required roles
@@ -17,15 +16,15 @@ const userStatus = {
 };
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
-  "/dashboard": [userStatus.USER, userStatus.ADMIN],
+  "/dashboard": [userStatus.USER],
 };
 
 export type JwtPayload = {
   id: string;
   email: string;
-  role: TRole; // Adjust based on your system's roles
-  iat: number; // Issued at timestamp
-  exp: number; // Expiration timestamp
+  role: "USER" | "ADMIN";
+  iat: number;
+  exp: number;
 };
 
 export async function middleware(request: NextRequest) {

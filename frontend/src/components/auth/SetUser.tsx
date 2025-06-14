@@ -19,6 +19,6 @@ export default function SetUser() {
       if(error) {
         handleError(error);
       }
-  }, [data, error]);
+  }, [data, error,  dispatch]);
   return null;
 }

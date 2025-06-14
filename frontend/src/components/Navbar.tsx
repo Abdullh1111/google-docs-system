@@ -10,6 +10,7 @@ export default function Navbar() {
         <span className="font-medium text-gray-800">{user?.fullName}</span>
       <div className="flex items-center gap-3">
         {user?.avatar && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={user.avatar}
             alt={user.fullName || 'User Avatar'}

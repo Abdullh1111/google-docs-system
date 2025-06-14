@@ -11,8 +11,8 @@ const MyEditor = () => {
     setIsMounted(true);
   }, []);
 
-  const handleEditorChange = (content: string, editor: any) => {
-    console.log(content, editor);
+  const handleEditorChange = (content: string) => {
+    console.log(content);
   };
 
   return (
