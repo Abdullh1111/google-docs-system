@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { handleError, handleSuccess } from "@/hooks/toaster";
+import { handleError, handleSuccess } from "@/lib/toaster";
 import { useLoginMutation } from "@/redux/services/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
