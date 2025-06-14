@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../hooks/catchAsync";
 import { userService } from "./user.service";
-import { CustomRequest } from "../../middleware/authorized";
+import { CustomRequest, Iuser } from "../../middleware/authorized";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const result = await userService.createUser(req.body);
@@ -32,8 +32,8 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const userData = catchAsync(async (req: CustomRequest, res: Response) => {
-  // console.log(req.user);
-  const result = await userService.userData(req.user.email);
+  const user = req.user as Iuser
+  const result = await userService.userData(user.email);
   res.send({
     success: true,
     message: "User data fetched successfully",

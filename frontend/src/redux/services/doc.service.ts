@@ -51,6 +51,13 @@ export const docsApi = createApi({
       }),
       invalidatesTags: ["Document"],
     }),
+
+    getDocument: build.query<any, string>({
+      query: (id) => ({
+        url: id,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -59,4 +66,5 @@ export const {
   useGetDocumentsQuery,
   useUpdateDocumentMutation,
   useDeleteDocumentMutation,
+  useGetDocumentQuery
 } = docsApi;

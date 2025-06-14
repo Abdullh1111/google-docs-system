@@ -1,18 +1,31 @@
 "use client";
 
+import { handleError } from "@/lib/toaster";
+import { useGetDocumentQuery } from "@/redux/services/doc.service";
 import { Editor } from "@tinymce/tinymce-react";
 import { useEffect, useState } from "react";
 
-const MyEditor = () => {
-  const title = "hello there";
+const MyEditor = ({id}: { id: string }) => {
+  const getdocument = useGetDocumentQuery(id);
   const [isMounted, setIsMounted] = useState(false);
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
 
+  useEffect(() => {
+    if (getdocument.data) {
+      setTitle(getdocument.data.data.title);
+      setContent(getdocument.data.data.content);
+    }
+    if (getdocument.error) {
+      handleError(getdocument.error);
+    }
+  }, [getdocument]);
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const handleEditorChange = (content: string) => {
-    console.log(content);
+  const handleEditorChange = (newContent: string) => {
+    console.log(newContent);
   };
 
   return (
@@ -21,6 +34,7 @@ const MyEditor = () => {
       {isMounted && (
         <Editor
           apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
+          value={content}
           init={{
             height: "90vh",
             menubar: false,

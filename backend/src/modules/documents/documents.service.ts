@@ -28,9 +28,15 @@ const deleteDocument = async (id: string) => {
     return result
 }
 
+const getDocument = async (id: string) => {
+    const result = await DocumentModel.findById(id)
+    return result
+}
+
 export default {
     createDocument,
     getDocuments,
     updateDocument,
-    deleteDocument
+    deleteDocument,
+    getDocument
 }

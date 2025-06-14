@@ -41,9 +41,19 @@ const deleteDocument = catchAsync(async (req: CustomRequest, res: Response) => {
   });
 });
 
+const getDocument = catchAsync(async (req: CustomRequest, res: Response) => {
+  const result = await documentsService.getDocument(req.params.id);
+  res.send({
+    success: true,
+    message: "Document fetched successfully",
+    data: result,
+  });
+});
+
 export default {
   createDocument,
   getDocuments,
   updateDocument,
   deleteDocument,
+  getDocument
 };
