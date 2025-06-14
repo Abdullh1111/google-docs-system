@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,6 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import LogoutButton from "../LogoutButton";
+import { useAppSelector } from "@/redux/redux.hook";
 
 type props = {
   items: {
@@ -25,7 +25,7 @@ export function AppSidebar({ items }: props) {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Ticket Management</SidebarGroupLabel>
+          <SidebarGroupLabel>My Docs</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

@@ -49,7 +49,16 @@ async function signInUser(data: TUser) {
   }
 }
 
+async function userData(email: string) {
+  const userExist = await user.findOne({ email });
+  if (!userExist) {
+    throw new AppError(400, "User does not exist");
+  }
+  return userExist;
+}
+
 export const userService = {
   createUser,
   signInUser,
+  userData
 };

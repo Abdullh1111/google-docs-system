@@ -1,7 +1,8 @@
 import { AppSidebar } from "@/components/sidebar/dashboardSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Metadata } from "next";
-import { Calendar, Home, Inbox } from "lucide-react";
+import { Home,  } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "Ticket management dashboard",
@@ -11,19 +12,9 @@ export const metadata: Metadata = {
 // Menu items.
 const items = [
   {
-    title: "Ticket lists",
-    url: "/dashboard/tickets",
+    title: "Documents",
+    url: "/dashboard/documents",
     icon: Home,
-  },
-  {
-    title: "Add Ticket",
-    url: "/dashboard/addTicket",
-    icon: Calendar,
-  },
-  {
-    title: "Inbox",
-    url: "/dashboard/chat",
-    icon: Inbox,
   },
 ];
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -33,6 +24,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <AppSidebar items={items} />
         <div className="flex-1 relative">
           <SidebarTrigger className="block lg:hidden p-2" />
+          <Navbar />
           <main className="p-4">{children}</main>
         </div>
       </div>

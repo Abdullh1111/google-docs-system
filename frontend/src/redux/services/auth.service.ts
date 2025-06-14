@@ -39,9 +39,9 @@ export const authApi = createApi({
         method: "POST",
       }),
     }),
-    allUser: build.query<any, void>({
+    userData: build.query<any, void>({
       query: () => ({
-        url: "allUser",
+        url: "user",
         method: "GET",
       }),
     })
@@ -54,5 +54,5 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
-  useAllUserQuery
+  useUserDataQuery
 } = authApi;

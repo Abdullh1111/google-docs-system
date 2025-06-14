@@ -20,7 +20,7 @@ const MyEditor = () => {
       <h4 className="text-3xl font-bold uppercase mb-10">{title}</h4>
       {isMounted && (
         <Editor
-          apiKey="04qkcbz3ihidxrg0g8otqn147l050kimen849m1p5xkge9e0"
+          apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
           init={{
             height: "90vh",
             menubar: false,
