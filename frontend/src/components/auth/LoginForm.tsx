@@ -1,56 +1,62 @@
-'use client'
+"use client";
 
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useLoginMutation } from '@/redux/services/auth.service'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { handleError, handleSuccess } from "@/hooks/toaster";
+import { useLoginMutation } from "@/redux/services/auth.service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-})
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 export function LoginForm() {
-  const [login, {data, isLoading, error}] = useLoginMutation()
-  const router = useRouter()
+  const [login, { data, isLoading, error }] = useLoginMutation();
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-  })
+  });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     // console.log('Login data:', values)
-    login(values)
-  }
+    login(values);
+  };
 
   useEffect(() => {
     if (data) {
-      console.log(data)
-      localStorage.setItem('accessToken', data.accessToken)
-      localStorage.setItem('userId', data.user.id)
+      console.log(data);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userId", data.user.id);
 
-
-    document.cookie = `accessToken=${data.accessToken}; path=/; max-age=3600`;
-
-      alert('Login successful!')
-      if(data.user.role==='ADMIN'){
-         router.push('/admin')
+      handleSuccess(data.message || "Login successful!");
+      document.cookie = `accessToken=${data.accessToken}; path=/; max-age=3600`;
+      if (data.user.role === "ADMIN") {
+        router.push("/admin");
       } else {
-        router.push('/dashboard')
+        router.push("/dashboard");
       }
     }
     if (error) {
-      alert('Login failed!')
+      handleError(error);
     }
-  }, [error,data,isLoading, router]);
+  }, [error, data, isLoading, router]);
 
   return (
     <Form {...form}>
@@ -81,8 +87,10 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button disabled={isLoading} type="submit" className="w-full">{isLoading ? 'Loading...' : 'Login'}</Button>
+        <Button disabled={isLoading} type="submit" className="w-full">
+          {isLoading ? "Loading..." : "Login"}
+        </Button>
       </form>
     </Form>
-  )
+  );
 }

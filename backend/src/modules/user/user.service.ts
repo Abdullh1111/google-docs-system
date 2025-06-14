@@ -1,4 +1,5 @@
 import config from "../../config";
+import { AppError } from "../../hooks/AppError";
 import { TUser } from "./user.interface";
 import { user } from "./user.model";
 import bcrypt from 'bcrypt';
@@ -9,7 +10,7 @@ async function createUser(data: TUser) {
   const userExist = await user.findOne({ email });
 
   if (userExist) {
-    throw new Error("User already exists");
+    throw new AppError(400, "User already exists");
   } else {
     data.password = await bcrypt.hash(data.password, 10);
     data.avatar = "dsf"
@@ -23,7 +24,7 @@ async function signInUser(data: TUser) {
   const userExist = await user.findOne({ email });
 
   if (!userExist) {
-    throw new Error("User does not exist");
+    throw new AppError(400, "User does not exist");
   } else {
     const isPasswordCorrect = await bcrypt.compare(
       data.password,
@@ -43,7 +44,7 @@ async function signInUser(data: TUser) {
         userExist,
       };
     } else {
-      throw new Error("Password does not match.");
+      throw new AppError(400, "Password is incorrect");
     }
   }
 }

@@ -1,4 +1,5 @@
 'use client'
+import { handleError, handleSuccess } from '@/hooks/toaster';
 import { useLogoutMutation } from '@/redux/services/auth.service';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
@@ -14,11 +15,12 @@ export default function LogoutButton() {
   useEffect(() => {
     if (data) {
       localStorage.removeItem('accessToken');
-      alert('Logout successful!');
+      localStorage.removeItem('userId');
+      handleSuccess(data.message || 'Logout successful!');
       router.push('/login');
     }
     if (error) {
-      alert('Logout failed!');
+      handleError(error);
     }
   }, [data, error, isLoading, router]);
   return (

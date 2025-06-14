@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useRegisterMutation } from '@/redux/services/auth.service'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { handleError, handleSuccess } from '@/hooks/toaster'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -44,12 +45,11 @@ export function RegisterForm() {
 
   useEffect(() => {
     if (data) {
-      alert('Registration successful!')
+      handleSuccess(data.message || 'Registration successful!')
       router.push('/login')
     }
     if (error) {
-      console.log(error)
-      alert('Registration failed!')
+      handleError(error)
     }
   }, [error,data,isLoading, router])
 
