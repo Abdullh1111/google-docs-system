@@ -28,6 +28,7 @@ const MyEditor = ({id}: { id: string }) => {
     console.log(newContent);
   };
 
+
   return (
     <div>
       <h4 className="text-3xl font-bold uppercase mb-10">{title}</h4>

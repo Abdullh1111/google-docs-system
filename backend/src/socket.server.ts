@@ -4,6 +4,8 @@ import config from './config'
 
 let io: SocketIOServer
 
+
+const userSocketMap: Record<string, string> = {}
 export const configureSocket = (server: HTTPServer) => {
   io = new SocketIOServer(server, {
     cors: {
@@ -12,11 +14,16 @@ export const configureSocket = (server: HTTPServer) => {
     }
   })
   io.on('connection', (socket: Socket) => {
-    console.log('🔌 Socket connected:', socket.id)
+  const userId = socket.handshake.query.userId as string
+    console.log('🔌 Socket connected:', userId)
+
+  userSocketMap[userId] = socket.id
 
     socket.on('disconnect', () => {
-      console.log('❌ Socket disconnected:', socket.id)
+      delete userSocketMap[userId]
+      console.log('❌ Socket disconnected:', userId)
     })
+  console.log(userSocketMap)
   })
 }
 

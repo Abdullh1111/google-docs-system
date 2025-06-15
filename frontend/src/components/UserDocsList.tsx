@@ -28,7 +28,7 @@ export default function UserDocumentList() {
   const onDelete = (id: string) => {
     deleteDocs(id);
   };
-  console.log(documents);
+  // console.log(documents);
 
   useEffect(() => {
     if (deleteDocsRes.data) {

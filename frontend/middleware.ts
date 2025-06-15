@@ -28,9 +28,9 @@ export type JwtPayload = {
 };
 
 export async function middleware(request: NextRequest) {
-  console.log("hello there")
+  // console.log("hello there")
   const { pathname } = request.nextUrl;
-  console.log("pathname", pathname);
+  // console.log("pathname", pathname);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   // Check if the path is protected
@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
 
 
     // Handle missing
-    console.log("token", token);
+    // console.log("token", token);
     if (!token) {
       if (request.headers.get("accept")?.includes("application/json")) {
         return NextResponse.json(
@@ -63,7 +63,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", baseUrl));
     }
 
-    console.log(user);
+    // console.log(user);
     // Check if user has required role for the path
     const requiredRoles =
       PROTECTED_ROUTES[protectedPath as keyof typeof PROTECTED_ROUTES];

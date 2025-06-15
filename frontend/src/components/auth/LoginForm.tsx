@@ -41,7 +41,7 @@ export function LoginForm() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      // console.log(data);
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("userId", data.user.id);
 
