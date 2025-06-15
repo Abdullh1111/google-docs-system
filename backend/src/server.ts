@@ -1,9 +1,16 @@
-import app from "./app"
-import config from "./config"
-import { connectDB } from "./config/db"
+import http from 'http'
+import app from './app'
+import config from './config'
+import { connectDB } from './config/db'
+import { configureSocket } from './socket.server'
 
 const port = config.PORT
-app.listen(port, async () => {
+
+const server = http.createServer(app) 
+
+configureSocket(server)
+
+server.listen(port, async () => {
   await connectDB()
-  console.log(`Example app listening on port ${port}`)
+  console.log(`🚀 Server running on port ${port}`)
 })
