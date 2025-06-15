@@ -1,31 +1,40 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { GetSocket } from "@/lib/socket";
 import { handleError } from "@/lib/toaster";
+import { useAppSelector } from "@/redux/redux.hook";
 import { useGetDocumentQuery } from "@/redux/services/doc.service";
 import { Editor } from "@tinymce/tinymce-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
-const MyEditor = ({id}: { id: string }) => {
+const MyEditor = ({ id }: { id: string }) => {
+  const [users, setUsers] = useState<{ email: string; avatar: string }[]>([]);
   const getdocument = useGetDocumentQuery(id);
   const [isMounted, setIsMounted] = useState(false);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const socket = GetSocket();
   const router = useRouter();
+  const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     if (getdocument.data) {
       setTitle(getdocument.data.data.title);
       setContent(getdocument.data.data.content);
-      socket?.emit("join-room", getdocument.data.data._id);
+      socket?.emit("join-room", {
+        roomId: getdocument.data.data._id,
+        email: user?.email,
+        avatar: user?.avatar,
+      });
     }
     if (getdocument.error) {
       handleError(getdocument.error);
       router.push("/dashboard");
     }
-  }, [getdocument, socket, router]);
+  }, [getdocument, socket, router, user]);
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -33,8 +42,15 @@ const MyEditor = ({id}: { id: string }) => {
   useEffect(() => {
     socket?.on("receive-document", (payload) => {
       setContent(payload.content);
-    })
+    });
   }, [socket, id]);
+
+  useEffect(() => {
+    socket?.on("user-joined", (payload) => {
+      setUsers(payload);
+    });
+  }, [socket]);
+
 
   const handleEditorChange = (newContent: string) => {
     setContent(newContent);
@@ -42,10 +58,35 @@ const MyEditor = ({id}: { id: string }) => {
     console.log(newContent);
   };
 
+  const handleLeave = () => {
+    socket?.emit("leave-room", {
+      roomId: id,
+    });
+    router.push("/dashboard/documents");
+  };
+
+  console.log(users);
 
   return (
     <div>
-      <h4 className="text-3xl font-bold uppercase mb-10">{title}</h4>
+      <div>
+
+      <h4 className="text-3xl font-bold uppercase mb-5  ">{title}</h4>
+      <Button className="w-full bg-red-600 text-white mb-5 hover:bg-red-700 hover:text-white" onClick={handleLeave}>Leave</Button>
+      </div>
+      {users?.length > 0 && (
+        <div className="flex flex-wrap items-center gap-5 mb-10">
+          {users.map((user) => (
+            <img
+              title={user.email}
+              key={user.email}
+              src={user.avatar}
+              alt={user.email}
+              className="w-12 h-12 rounded-full border-2 border-green-500"
+            />
+          ))}
+        </div>
+      )}
       {isMounted && (
         <Editor
           apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
