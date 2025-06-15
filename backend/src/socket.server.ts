@@ -17,10 +17,16 @@ export const configureSocket = (server: HTTPServer) => {
     console.log("🔌 Socket connected:", userId);
     userSocketMap[userId] = socket.id;
 
-     socket.on("join-room", (roomId) => {
-    socket.join(roomId);
-    console.log(`Socket ${socket.id} joined room ${roomId}`);
-  });
+    socket.on("join-room", (roomId) => {
+      socket.join(roomId);
+      console.log(`Socket ${socket.id} joined room ${roomId}`);
+    });
+
+    socket.on("edit-document", (payload) => {
+      const { roomId, content } = payload;
+      console.log("📝 Document edited:", roomId, content);
+      socket.to(roomId).emit("receive-document", { content });
+    });
 
     socket.on("disconnect", () => {
       delete userSocketMap[userId];

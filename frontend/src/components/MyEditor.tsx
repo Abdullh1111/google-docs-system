@@ -30,7 +30,15 @@ const MyEditor = ({id}: { id: string }) => {
     setIsMounted(true);
   }, []);
 
+  useEffect(() => {
+    socket?.on("receive-document", (payload) => {
+      setContent(payload.content);
+    })
+  }, [socket, id]);
+
   const handleEditorChange = (newContent: string) => {
+    setContent(newContent);
+    socket?.emit("edit-document", { roomId: id, content: newContent });
     console.log(newContent);
   };
 
