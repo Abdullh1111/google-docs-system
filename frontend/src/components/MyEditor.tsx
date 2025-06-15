@@ -1,8 +1,10 @@
 "use client";
 
+import { GetSocket } from "@/lib/socket";
 import { handleError } from "@/lib/toaster";
 import { useGetDocumentQuery } from "@/redux/services/doc.service";
 import { Editor } from "@tinymce/tinymce-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const MyEditor = ({id}: { id: string }) => {
@@ -10,16 +12,20 @@ const MyEditor = ({id}: { id: string }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const socket = GetSocket();
+  const router = useRouter();
 
   useEffect(() => {
     if (getdocument.data) {
       setTitle(getdocument.data.data.title);
       setContent(getdocument.data.data.content);
+      socket?.emit("join-room", getdocument.data.data._id);
     }
     if (getdocument.error) {
       handleError(getdocument.error);
+      router.push("/dashboard");
     }
-  }, [getdocument]);
+  }, [getdocument, socket, router]);
   useEffect(() => {
     setIsMounted(true);
   }, []);

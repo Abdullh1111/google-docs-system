@@ -1,10 +1,12 @@
 "use client";
+import { GetSocket } from "@/lib/socket";
 import { handleError, handleSuccess } from "@/lib/toaster";
 import { useLogoutMutation } from "@/redux/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function LogoutButton() {
+  const socket = GetSocket();
   const router = useRouter();
   const [logout, { isLoading, data, error }] = useLogoutMutation();
 
@@ -17,12 +19,13 @@ export default function LogoutButton() {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userId");
       handleSuccess(data.message || "Logout successful!");
+      socket?.disconnect();
       router.push("/login");
     }
     if (error) {
       handleError(error);
     }
-  }, [data, error, isLoading, router]);
+  }, [data, error, isLoading, router, socket]);
   return (
     <button
       disabled={isLoading}
