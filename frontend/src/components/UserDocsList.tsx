@@ -82,7 +82,7 @@ export default function UserDocumentList() {
               <Button
                 variant={"outline"}
                 onClick={() => onDelete(doc._id as string)}
-                className="text-sm text-red-600 hover:underline hover:text-red-700 mt-2"
+                className="text-sm text-red-600 hover:underline hover:text-red-700 mt-2 md:mt-0"
               >
                 Delete
               </Button>
