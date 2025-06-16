@@ -42,11 +42,13 @@ const deleteDocument = catchAsync(async (req: CustomRequest, res: Response) => {
 });
 
 const getDocument = catchAsync(async (req: CustomRequest, res: Response) => {
-  const result = await documentsService.getDocument(req.params.id);
+  const user = req?.user as Iuser
+  const result = await documentsService.getDocument(req.params.id, user);
   res.send({
     success: true,
     message: "Document fetched successfully",
-    data: result,
+    data: result.result,
+    role: result.role
   });
 });
 

@@ -6,6 +6,10 @@ const DocumentSchema = new Schema<TDocument>(
     title: { type: String, required: true },
     content: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    sharedWith: {
+      type: Object,
+      default: {},
+    },
   },
   { timestamps: true }
 );
