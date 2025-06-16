@@ -58,11 +58,20 @@ const sharedWith = async (
   id: string
 ) => {
   const { email, role } = body;
-  await DocumentModel.findByIdAndUpdate(id, {
-    $set: {
-      [`sharedWith.${email}`]: role || "",
-    },
-  });
+
+  const doc = await DocumentModel.findById(id);
+  if (!doc) {
+    throw new AppError(400, "Document not found");
+  }
+  const result = await DocumentModel.findByIdAndUpdate(id, {
+    sharedWith:{
+      ...doc.sharedWith,
+      [email]: role
+    }
+  })
+  console.log(result);
+
+  return result;
 };
 
 export default {

@@ -59,9 +59,9 @@ export const docsApi = createApi({
       }),
     }),
 
-    sharedWith: build.mutation<any, { email: string; role: "EDITOR" | "VIEWER", id: string }>({
+    sharedWith: build.mutation<any, { email: string; role: string, id: string }>({
       query: ( {email, role , id}) => ({
-        url: id,
+        url: `share/${id}`,
         method: "PUT",
         body: { email, role },
       }),

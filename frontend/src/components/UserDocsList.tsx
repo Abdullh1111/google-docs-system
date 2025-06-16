@@ -1,19 +1,22 @@
 "use client";
 
 import { handleError, handleSuccess } from "@/lib/toaster";
-import { useDeleteDocumentMutation, useGetDocumentsQuery } from "@/redux/services/doc.service";
+import {
+  useDeleteDocumentMutation,
+  useGetDocumentsQuery,
+} from "@/redux/services/doc.service";
 import { TDocument } from "@/types/documens.interface";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CustomDialog } from "./CustomDialog";
 import LoadingSpinner from "./Loading";
+import { ShareDialog } from "./ShareDialog";
 import { Button } from "./ui/button";
 
 export default function UserDocumentList() {
   const getDocRes = useGetDocumentsQuery();
   const [deleteDocs, deleteDocsRes] = useDeleteDocumentMutation();
   const [documents, setDocuments] = useState<TDocument[]>([]);
-
 
   useEffect(() => {
     if (getDocRes.data) {
@@ -24,7 +27,6 @@ export default function UserDocumentList() {
     }
   }, [getDocRes]);
 
-
   const onDelete = (id: string) => {
     deleteDocs(id);
   };
@@ -32,13 +34,14 @@ export default function UserDocumentList() {
 
   useEffect(() => {
     if (deleteDocsRes.data) {
-      handleSuccess(deleteDocsRes.data.message || "Document deleted successfully");
+      handleSuccess(
+        deleteDocsRes.data.message || "Document deleted successfully"
+      );
     }
     if (deleteDocsRes.error) {
       handleError(deleteDocsRes.error);
     }
   }, [deleteDocsRes]);
-
 
   if (getDocRes.isLoading) {
     return (
@@ -75,6 +78,7 @@ export default function UserDocumentList() {
                 id={doc._id}
                 className="text-sm text-blue-600 hover:underline bg-transparent hover:text-blue-700"
               />
+              <ShareDialog id={doc._id as string} className="text-sm bg-blue-600 hover:underline hover:text-blue-600"/>
               <Button
                 variant={"outline"}
                 onClick={() => onDelete(doc._id as string)}

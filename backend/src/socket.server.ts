@@ -20,7 +20,7 @@ export const configureSocket = (server: HTTPServer) => {
 
   io.on("connection", (socket: Socket) => {
     const userId = socket.handshake.query.userId as string;
-    console.log("🔌 Socket connected:", userId);
+    console.log(" Socket connected:", userId);
     userSocketMap[userId] = socket.id;
 
     // Room
@@ -32,7 +32,7 @@ export const configureSocket = (server: HTTPServer) => {
 
 
 
-    console.log("🧭 Current activeRoomUsers:", activeRoomUsers[roomId]);
+    console.log(" Current activeRoomUsers:", activeRoomUsers[roomId]);
       io.to(roomId).emit("user-joined", Object.values(activeRoomUsers[roomId]));
     });
 
@@ -40,13 +40,13 @@ export const configureSocket = (server: HTTPServer) => {
     socket.on("leave-room", ({ roomId }) => {
       if (!roomId) return;
 
-    console.log("🧭 Current activeRoomUsers:", activeRoomUsers[roomId]);
+    console.log(" Current activeRoomUsers:", activeRoomUsers[roomId]);
       socket.leave(roomId);
 
       const room = activeRoomUsers[roomId];
       if (room && room[userId]) {
         delete room[userId];
-        console.log(`🚪 Socket ${socket.id} left room ${roomId}`);
+        console.log(` Socket ${socket.id} left room ${roomId}`);
       }
 
       if (activeRoomUsers[roomId]) {
@@ -58,16 +58,16 @@ export const configureSocket = (server: HTTPServer) => {
     // room
 
     socket.on("edit-document", ({ roomId, content }) => {
-      console.log("📝 Document edited:", roomId, content);
+      console.log(" Document edited:", roomId, content);
       socket.to(roomId).emit("receive-document", { content });
     });
 
     socket.on("disconnect", () => {
       delete userSocketMap[userId];
 
-      console.log("❌ Socket disconnected:", userId);
+      console.log(" Socket disconnected:", userId);
     });
 
-    console.log("🧭 Current userSocketMap:", userSocketMap);
+    console.log(" Current userSocketMap:", userSocketMap);
   });
 };
