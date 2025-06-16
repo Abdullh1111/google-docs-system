@@ -58,6 +58,14 @@ export const docsApi = createApi({
         method: "GET",
       }),
     }),
+
+    sharedWith: build.mutation<any, { email: string; role: "EDITOR" | "VIEWER", id: string }>({
+      query: ( {email, role , id}) => ({
+        url: id,
+        method: "PUT",
+        body: { email, role },
+      }),
+    })
   }),
 });
 
@@ -66,5 +74,6 @@ export const {
   useGetDocumentsQuery,
   useUpdateDocumentMutation,
   useDeleteDocumentMutation,
-  useGetDocumentQuery
+  useGetDocumentQuery,
+  useSharedWithMutation
 } = docsApi;

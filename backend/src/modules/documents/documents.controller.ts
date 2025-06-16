@@ -52,10 +52,20 @@ const getDocument = catchAsync(async (req: CustomRequest, res: Response) => {
   });
 });
 
+const sharedWith = catchAsync(async (req: CustomRequest, res: Response) => {
+  const result = await documentsService.sharedWith(req.body, req.params.id);
+  res.send({
+    success: true,
+    message: "Document shared successfully",
+    data: result,
+  });
+})
+
 export default {
   createDocument,
   getDocuments,
   updateDocument,
   deleteDocument,
-  getDocument
+  getDocument,
+  sharedWith,
 };
