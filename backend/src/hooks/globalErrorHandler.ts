@@ -10,7 +10,7 @@ export async function globalErrorHandler(
 ) {
   const message = err.message || "Internal Server Error";
   const status = err.status || 500;
-  console.log(err);
+  // console.log(err);
 
   res.status(status).send({
     success: false,

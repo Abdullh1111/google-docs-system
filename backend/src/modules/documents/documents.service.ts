@@ -69,7 +69,7 @@ const sharedWith = async (
       [email]: role
     }
   })
-  console.log(result);
+  // console.log(result);
 
   return result;
 };

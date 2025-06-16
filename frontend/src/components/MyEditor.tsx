@@ -48,7 +48,7 @@ const MyEditor = ({ id }: { id: string }) => {
 
   useEffect(() => {
     if(getdocument.data?.role) {
-      console.log(getdocument.data?.role);
+      // console.log(getdocument.data?.role);
       setCanEdit(getdocument.data?.role === "EDITOR");
     }
   }, [getdocument.data?.role]);
@@ -105,7 +105,7 @@ const MyEditor = ({ id }: { id: string }) => {
   };
 
 
-  console.log(canEdit);
+  // console.log(canEdit);
   return (
     <div>
       <div className="flex items-center justify-between">

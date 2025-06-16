@@ -18,14 +18,14 @@ export async function uploadImage(req: CustomRequest,res: Response,  next: NextF
     const base64 = req.file.buffer.toString('base64');
     const dataUri = `data:${req.file.mimetype};base64,${base64}`;
     const result = await cloudinary.uploader.upload(dataUri);
-    console.log(result);
+    // console.log(result);
     const body = {
       ...req.body,
       avatar: result.secure_url,}
       req.user = body
   next();
    } catch (error) {
-    console.log(error);
+    // console.log(error);
     next(error);
    }
 }
