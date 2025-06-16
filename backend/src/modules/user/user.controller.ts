@@ -3,8 +3,9 @@ import { catchAsync } from "../../hooks/catchAsync";
 import { userService } from "./user.service";
 import { CustomRequest, Iuser } from "../../middleware/authorized";
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.createUser(req.body);
+const createUser = catchAsync(async (req: CustomRequest, res: Response) => {
+  const user = req?.user as Iuser
+  const result = await userService.createUser(user);
 
   res.send({
     success: true,
@@ -13,7 +14,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const signInUser = catchAsync(async (req: Request, res: Response) => {
+const signInUser = catchAsync(async (req: CustomRequest, res: Response) => {
   const {token, userExist} = await userService.signInUser(req.body);
 
   res.send({

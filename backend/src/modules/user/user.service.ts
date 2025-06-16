@@ -13,7 +13,6 @@ async function createUser(data: TUser) {
     throw new AppError(400, "User already exists");
   } else {
     data.password = await bcrypt.hash(data.password, 10);
-    data.avatar = "dsf"
     const result = await user.create(data);
     return result;
   }

@@ -24,6 +24,7 @@ const formSchema = z
     email: z.string().email("Invalid email"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
+    avatar: z.any().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -40,16 +41,20 @@ export function RegisterForm() {
       email: "",
       password: "",
       confirmPassword: "",
+      avatar: undefined,
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const data = {
-      fullName: values.name,
-      email: values.email,
-      password: values.password,
-    };
-    register(data);
+    const formData = new FormData();
+    formData.append("fullName", values.name);
+    formData.append("email", values.email);
+    formData.append("password", values.password);
+    if (values.avatar && values.avatar[0]) {
+      formData.append("avatar", values.avatar[0]);
+    }
+
+    register(formData);
   };
 
   useEffect(() => {
@@ -112,6 +117,23 @@ export function RegisterForm() {
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
                 <Input placeholder="********" type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="avatar"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Avatar</FormLabel>
+              <FormControl>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => field.onChange(e.target.files)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
