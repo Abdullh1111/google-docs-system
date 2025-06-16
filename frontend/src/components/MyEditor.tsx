@@ -47,18 +47,21 @@ const MyEditor = ({ id }: { id: string }) => {
   }, []);
 
   useEffect(() => {
-    if (getdocument.data?.role) {
-      // console.log(getdocument.data?.role);
+    if(getdocument.data?.role) {
+      console.log(getdocument.data?.role);
       setCanEdit(getdocument.data?.role === "EDITOR");
+      
     }
   }, [getdocument.data?.role]);
 
   useEffect(() => {
-    socket?.on("receive-document", (payload) => {
+  socket?.on("receive-document", (payload) => {
+    if (contentRef.current !== payload.content) {
       contentRef.current = payload.content;
       setContent(payload.content);
-    });
-  }, [socket, id]);
+    }
+  });
+}, [socket, id]);
 
   useEffect(() => {
     socket?.on("user-joined", (payload) => {
@@ -104,7 +107,8 @@ const MyEditor = ({ id }: { id: string }) => {
     updateDocument({ id, content: contentRef.current }).unwrap();
   };
 
-  // console.log(canEdit);
+
+  console.log(canEdit);
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -137,26 +141,26 @@ const MyEditor = ({ id }: { id: string }) => {
         </div>
       )}
       {isMounted && (
-        <Editor
-          key={canEdit ? "editable" : "readonly"}
-          disabled={!canEdit}
-          apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
-          value={content}
-          init={{
-            height: "90vh",
-            menubar: false,
-            plugins: "lists link image preview placeholder",
-            placeholder: "Type here...",
-            toolbar:
-              "undo redo | formatselect fontselect fontsizeselect | bold italic underline strikethrough removeformat | " +
-              "forecolor backcolor | alignleft aligncenter alignright alignjustify | " +
-              "bullist numlist outdent indent | blockquote code | " +
-              "table link | preview fullscreen",
-            font_size_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
-          }}
-          onEditorChange={handleEditorChange}
-        />
-      )}
+  <Editor
+    key={canEdit ? "editable" : "readonly"} // force remount when permission changes
+    disabled={!canEdit}
+    apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
+    value={content}
+    init={{
+      height: "90vh",
+      menubar: false,
+      plugins: "lists link image preview placeholder",
+      placeholder: "Type here...",
+      toolbar:
+        "undo redo | formatselect fontselect fontsizeselect | bold italic underline strikethrough removeformat | " +
+        "forecolor backcolor | alignleft aligncenter alignright alignjustify | " +
+        "bullist numlist outdent indent | blockquote code | " +
+        "table link | preview fullscreen",
+      font_size_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
+    }}
+    onEditorChange={handleEditorChange}
+  />
+)}
     </div>
   );
 };
