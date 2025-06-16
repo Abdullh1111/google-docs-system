@@ -47,9 +47,10 @@ const getDocument = async (id: string, user: Iuser) => {
     throw new AppError(403, "You don't have access to this document");
   }
   
+  // console.log(hasAccess)
   return {
     result,
-    role: hasAccess || "VIEWER",
+    role: isOwner ? "EDITOR" : hasAccess,
   };
 };
 

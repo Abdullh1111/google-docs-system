@@ -47,7 +47,7 @@ const MyEditor = ({ id }: { id: string }) => {
   }, []);
 
   useEffect(() => {
-    if(getdocument.data?.role) {
+    if (getdocument.data?.role) {
       // console.log(getdocument.data?.role);
       setCanEdit(getdocument.data?.role === "EDITOR");
     }
@@ -104,7 +104,6 @@ const MyEditor = ({ id }: { id: string }) => {
     updateDocument({ id, content: contentRef.current }).unwrap();
   };
 
-
   // console.log(canEdit);
   return (
     <div>
@@ -139,6 +138,7 @@ const MyEditor = ({ id }: { id: string }) => {
       )}
       {isMounted && (
         <Editor
+          key={canEdit ? "editable" : "readonly"}
           disabled={!canEdit}
           apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
           value={content}
@@ -152,7 +152,6 @@ const MyEditor = ({ id }: { id: string }) => {
               "forecolor backcolor | alignleft aligncenter alignright alignjustify | " +
               "bullist numlist outdent indent | blockquote code | " +
               "table link | preview fullscreen",
-
             font_size_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
           }}
           onEditorChange={handleEditorChange}
