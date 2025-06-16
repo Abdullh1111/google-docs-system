@@ -4,10 +4,13 @@
 import { GetSocket } from "@/lib/socket";
 import { handleError } from "@/lib/toaster";
 import { useAppSelector } from "@/redux/redux.hook";
-import { useGetDocumentQuery } from "@/redux/services/doc.service";
+import {
+  useGetDocumentQuery,
+  useUpdateDocumentMutation,
+} from "@/redux/services/doc.service";
 import { Editor } from "@tinymce/tinymce-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 
 const MyEditor = ({ id }: { id: string }) => {
@@ -19,6 +22,9 @@ const MyEditor = ({ id }: { id: string }) => {
   const socket = GetSocket();
   const router = useRouter();
   const user = useAppSelector((state) => state.user.user);
+  const [hasChanges, setHasChanges] = useState(false);
+  const contentRef = useRef(content);
+  const [updateDocument, updateDocumentRes] = useUpdateDocumentMutation();
 
   useEffect(() => {
     if (getdocument.data) {
@@ -41,6 +47,7 @@ const MyEditor = ({ id }: { id: string }) => {
 
   useEffect(() => {
     socket?.on("receive-document", (payload) => {
+      contentRef.current = payload.content;
       setContent(payload.content);
     });
   }, [socket, id]);
@@ -51,11 +58,31 @@ const MyEditor = ({ id }: { id: string }) => {
     });
   }, [socket]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (hasChanges) {
+        updateDocument({ id, content: contentRef.current }).unwrap();
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [hasChanges, updateDocument, id]);
+
+  useEffect(() => {
+    if (updateDocumentRes.data) {
+      setHasChanges(false);
+    }
+    if (updateDocumentRes.error) {
+      handleError(updateDocumentRes.error);
+    }
+  }, [updateDocumentRes]);
 
   const handleEditorChange = (newContent: string) => {
     setContent(newContent);
+    contentRef.current = newContent;
+    console.log("Content changed:", newContent);
+    setHasChanges(true);
     socket?.emit("edit-document", { roomId: id, content: newContent });
-    console.log(newContent);
   };
 
   const handleLeave = () => {
@@ -65,15 +92,28 @@ const MyEditor = ({ id }: { id: string }) => {
     router.push("/dashboard/documents");
   };
 
-  console.log(users);
+  const handleSave = () => {
+    updateDocument({ id, content: contentRef.current }).unwrap();
+  };
 
   return (
     <div>
-      <div>
-
-      <h4 className="text-3xl font-bold uppercase mb-5  ">{title}</h4>
-      <Button className="w-full bg-red-600 text-white mb-5 hover:bg-red-700 hover:text-white" onClick={handleLeave}>Leave</Button>
+      <div className="flex items-center justify-between">
+        <h4 className="text-3xl font-bold uppercase mb-5  ">{title}</h4>
+        <Button
+          disabled={!hasChanges || updateDocumentRes.isLoading}
+          className="bg-green-600 text-white mb-5 hover:bg-green-700 hover:text-white"
+          onClick={handleSave}
+        >
+          {updateDocumentRes.isLoading ? "Saving..." : "Save"}
+        </Button>
       </div>
+      <Button
+        className="w-full bg-red-600 text-white mb-5 hover:bg-red-700 hover:text-white"
+        onClick={handleLeave}
+      >
+        Leave
+      </Button>
       {users?.length > 0 && (
         <div className="flex flex-wrap items-center gap-5 mb-10">
           {users.map((user) => (

@@ -36,7 +36,7 @@ export const docsApi = createApi({
       }),
       providesTags: ["Document"],
     }),
-    updateDocument: build.mutation<any, { id: string; title: string }>({
+    updateDocument: build.mutation<any, { id: string; title?: string, content?: string }>({
       query: ({ id, ...body }) => ({
         url: id,
         method: "PUT",
