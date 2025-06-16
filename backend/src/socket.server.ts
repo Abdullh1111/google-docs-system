@@ -64,6 +64,15 @@ export const configureSocket = (server: HTTPServer) => {
 
     socket.on("disconnect", () => {
       delete userSocketMap[userId];
+      const rooms = Object.keys(activeRoomUsers);
+      for (const roomId of rooms) {
+        const room = activeRoomUsers[roomId];
+        if (room && room[userId]) {
+          delete room[userId];
+          const updatedUsers = Object.values(activeRoomUsers[roomId]);
+          io.to(roomId).emit("user-joined", updatedUsers);
+        }
+      }
 
       console.log(" Socket disconnected:", userId);
     });

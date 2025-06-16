@@ -25,6 +25,7 @@ const MyEditor = ({ id }: { id: string }) => {
   const [hasChanges, setHasChanges] = useState(false);
   const contentRef = useRef(content);
   const [updateDocument, updateDocumentRes] = useUpdateDocumentMutation();
+  const [canEdit, setCanEdit] = useState(false);
 
   useEffect(() => {
     if (getdocument.data) {
@@ -44,6 +45,13 @@ const MyEditor = ({ id }: { id: string }) => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if(getdocument.data?.role) {
+      console.log(getdocument.data?.role);
+      setCanEdit(getdocument.data?.role === "EDITOR");
+    }
+  }, [getdocument.data?.role]);
 
   useEffect(() => {
     socket?.on("receive-document", (payload) => {
@@ -80,7 +88,7 @@ const MyEditor = ({ id }: { id: string }) => {
   const handleEditorChange = (newContent: string) => {
     setContent(newContent);
     contentRef.current = newContent;
-    console.log("Content changed:", newContent);
+    // console.log("Content changed:", newContent);
     setHasChanges(true);
     socket?.emit("edit-document", { roomId: id, content: newContent });
   };
@@ -96,6 +104,8 @@ const MyEditor = ({ id }: { id: string }) => {
     updateDocument({ id, content: contentRef.current }).unwrap();
   };
 
+
+  console.log(canEdit);
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -129,6 +139,7 @@ const MyEditor = ({ id }: { id: string }) => {
       )}
       {isMounted && (
         <Editor
+          disabled={!canEdit}
           apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
           value={content}
           init={{
