@@ -52,8 +52,8 @@ export default function UserDocumentList() {
   }
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">My Documents</h2>
+      <div className="md:flex  items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold mb-2">My Documents</h2>
         <CustomDialog
           type="create"
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white transition"
@@ -64,15 +64,15 @@ export default function UserDocumentList() {
         {documents.map((doc) => (
           <div
             key={doc._id}
-            className="flex items-center justify-between p-4 border rounded-md bg-white shadow hover:shadow-md transition"
+            className="md:flex items-center justify-between p-4 border rounded-md bg-white shadow hover:shadow-md transition"
           >
             <Link href={`/dashboard/documents/${doc._id}`} className="flex-1">
-              <h3 className="font-medium text-lg hover:underline text-gray-800">
+              <h3 className="font-medium text-lg hover:underline text-gray-800  mb-5 md:mb-0 text-center md:text-left">
                 {doc.title}
               </h3>
             </Link>
 
-            <div className="flex space-x-3 ml-4">
+            <div className="flex space-x-3 ml-4 flex-wrap">
               <CustomDialog
                 type="edit"
                 id={doc._id}
@@ -82,7 +82,7 @@ export default function UserDocumentList() {
               <Button
                 variant={"outline"}
                 onClick={() => onDelete(doc._id as string)}
-                className="text-sm text-red-600 hover:underline hover:text-red-700"
+                className="text-sm text-red-600 hover:underline hover:text-red-700 mt-2"
               >
                 Delete
               </Button>
