@@ -144,6 +144,7 @@ const MyEditor = ({ id }: { id: string }) => {
           editorRef.current = editor;
           editor.setContent(contentRef.current); 
         }}
+        initialValue={contentRef.current}
         disabled={!canEdit}
         apiKey={process.env.NEXT_PUBLIC_TYNMCE_API_KEY}
         init={{
