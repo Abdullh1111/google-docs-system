@@ -24,14 +24,14 @@ const MyEditor = ({ id }: { id: string }) => {
   const [hasChanges, setHasChanges] = useState(false);
   const contentRef = useRef<string>("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const editorRef = useRef<any>(null); // Editor instance
+  const editorRef = useRef<any>(null);
   const [updateDocument, updateDocumentRes] = useUpdateDocumentMutation();
   const [canEdit, setCanEdit] = useState(false);
 
   const debouncedEmit = useRef(
     debounce((roomId: string, content: string) => {
       socket?.emit("edit-document", { roomId, content });
-    }, 500)
+    }, 300)
   ).current;
 
   useEffect(() => {
@@ -46,14 +46,20 @@ const MyEditor = ({ id }: { id: string }) => {
         email: user?.email,
         avatar: user?.avatar,
       });
+
+      if (editorRef.current) {
+        editorRef.current.setContent(doc.content);
+      }
     }
+
     if (getdocument.error) {
       handleError(getdocument.error);
       router.push("/dashboard");
     }
   }, [getdocument, socket, router, user]);
+
   useEffect(() => {
-    socket?.on("receive-document", (payload) => {
+    const handleReceive = (payload: { content: string }) => {
       if (
         editorRef.current &&
         editorRef.current.getContent() !== payload.content
@@ -61,13 +67,25 @@ const MyEditor = ({ id }: { id: string }) => {
         editorRef.current.setContent(payload.content);
         contentRef.current = payload.content;
       }
-    });
+    };
+
+    socket?.on("receive-document", handleReceive);
+
+    return () => {
+      socket?.off("receive-document", handleReceive);
+    };
   }, [socket, id]);
 
   useEffect(() => {
-    socket?.on("user-joined", (payload) => {
+    const handleUserJoined = (payload: { email: string; avatar: string }[]) => {
       setUsers(payload);
-    });
+    };
+
+    socket?.on("user-joined", handleUserJoined);
+
+    return () => {
+      socket?.off("user-joined", handleUserJoined);
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -97,6 +115,8 @@ const MyEditor = ({ id }: { id: string }) => {
 
   const handleLeave = () => {
     socket?.emit("leave-room", { roomId: id });
+    socket?.off("receive-document");
+    socket?.off("user-joined");
     router.push("/dashboard/documents");
   };
 
@@ -128,10 +148,10 @@ const MyEditor = ({ id }: { id: string }) => {
         <div className="flex flex-wrap items-center gap-5 mb-10">
           {users.map((user) => (
             <img
-              title={user.email}
               key={user.email}
               src={user.avatar}
               alt={user.email}
+              title={user.email}
               className="w-12 h-12 rounded-full border-2 border-green-500"
             />
           ))}
@@ -142,7 +162,7 @@ const MyEditor = ({ id }: { id: string }) => {
         key={canEdit ? "editable" : "readonly"}
         onInit={(_, editor) => {
           editorRef.current = editor;
-          editor.setContent(contentRef.current); 
+          editor.setContent(contentRef.current);
         }}
         initialValue={contentRef.current}
         disabled={!canEdit}
