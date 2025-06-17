@@ -89,16 +89,6 @@ const MyEditor = ({ id }: { id: string }) => {
   }, [socket]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (hasChanges) {
-        updateDocument({ id, content: contentRef.current }).unwrap();
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [hasChanges, updateDocument, id]);
-
-  useEffect(() => {
     if (updateDocumentRes.data) {
       setHasChanges(false);
     }
